@@ -1,0 +1,25 @@
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.sln.docstates
+*.userprefs
+
+# Python
+venv/
+__pycache__/
+*.py[cod]
+*.so
+
+# Rider
+.idea/
+*.iml
+
+# User-specific
+*.[Oo]
+*.obj
+*.pdb
+*.ilk
+*.aps
+bin/
+obj/

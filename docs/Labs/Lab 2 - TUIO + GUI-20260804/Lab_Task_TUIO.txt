@@ -1,0 +1,63 @@
+switch (tobj.SymbolID)
+{
+				case 1:
+					objectImagePath = Path.Combine(Environment.CurrentDirectory, "pngegg_4.png");
+					backgroundImagePath = Path.Combine(Environment.CurrentDirectory, "bg1.jpg");
+					break;
+				case 2:
+					objectImagePath = Path.Combine(Environment.CurrentDirectory, "pngegg_5.png");
+					backgroundImagePath = Path.Combine(Environment.CurrentDirectory, "bg2.jpg");
+					break;
+				case 0:
+					objectImagePath = Path.Combine(Environment.CurrentDirectory, "pngegg_3.png");
+					backgroundImagePath = Path.Combine(Environment.CurrentDirectory, "bg3.jpg");
+					break;
+				default:
+					// Use default rectangle for other IDs
+					g.FillRectangle(objBrush, new Rectangle(ox - size / 2, oy - size / 2, size, size));
+					g.DrawString(tobj.SymbolID + "", font, fntBrush, new PointF(ox - 10, oy - 10));
+					continue;
+}
+
+try
+{
+				// Draw background image without rotation
+				if (File.Exists(backgroundImagePath))
+				{
+					using (Image bgImage = Image.FromFile(backgroundImagePath))
+					{
+						g.DrawImage(bgImage, new Rectangle(new Point(0, 0), new Size(width, height)));
+					}
+				}
+				else
+				{
+					Console.WriteLine($"Background image not found: {backgroundImagePath}");
+				}
+
+				// Draw object image with rotation
+				if (File.Exists(objectImagePath))
+				{
+					using (Image objectImage = Image.FromFile(objectImagePath))
+					{
+						// Save the current state of the graphics object
+						GraphicsState state = g.Save();
+
+						// Apply transformations for rotation
+						g.TranslateTransform(ox, oy);
+						g.RotateTransform((float)(tobj.Angle / Math.PI * 180.0f));
+						g.TranslateTransform(-ox, -oy);
+
+						// Draw the rotated object
+						g.DrawImage(objectImage, new Rectangle(ox - size / 2, oy - size / 2, size, size));
+
+						// Restore the graphics state
+						g.Restore(state);
+					}
+				}
+				else
+				{
+					Console.WriteLine($"Object image not found: {objectImagePath}");
+					// Fall back to drawing a rectangle
+					g.FillRectangle(objBrush, new Rectangle(ox - size / 2, oy - size / 2, size, size));
+				}
+}
